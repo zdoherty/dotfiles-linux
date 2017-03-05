@@ -1,0 +1,5 @@
+*.sw?
+.netrwhist
+bin/*
+.config/
+.i3/*.json
