@@ -82,6 +82,9 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
+# media window factory
+bindsym $mod+y fullscreen disable; floating enable; resize set 600 400; sticky enable; move window to position 2540 54
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
@@ -98,7 +101,7 @@ mode "session" {
     bindsym l mode "default", exec --no-startup-id $HOME/.i3/i3exit lock
     bindsym o mode "default", exec --no-startup-id $HOME/.i3/i3exit logout
     bindsym r mode "default", exec --no-startup-id $HOME/.i3/i3exit restart
-    bindsym h mode "default", exec --no-startup-id $HOME/.i3/i3exit halt
+    bindsym h mode "default", exec --no-startup-id $HOME/.i3/i3exit shutdown
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -118,4 +121,11 @@ exec_always --no-startup-id xautolock -time 5 -locker $HOME/.i3/i3exit lock
 
 # set the background
 exec_always --no-startup-id feh --bg-fill $HOME/.config/wallpaper.jpg
+
+# be cheezy
+exec_always --no-startup-id compton -f -c -i 0.9 -b
+
+# cache credentials on login
+exec --no-startup-id $terminal -name prompt -e ssh-add
+for_window [instance="prompt"] floating enable
 
