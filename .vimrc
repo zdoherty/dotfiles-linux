@@ -69,7 +69,7 @@ autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
 "{{{Look and Feel
 
 " Favorite Color Scheme
-colorscheme solarized
+colorscheme ir_black
 set background=dark
 
 "Status line gnarliness

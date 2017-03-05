@@ -1,7 +1,7 @@
 # i3 config file
 set $mod Mod4
 set $editor vim
-set $terminal urxvtcd
+set $terminal urxvt
 
 # Fonts for titles
 font pango:Hack 10
@@ -25,6 +25,10 @@ set_from_resource $white       color15 #000000
 set $black       #282828
 set $darkblack   #1d2021
 set $transparent #00000000
+# gaps
+new_window 1pixel
+gaps outer 10
+gaps inner 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -107,15 +111,11 @@ bar {
         status_command i3status
 }
 
-new_window 1pixel
-
+# autostart
+#
 # automatically lock computer after 5 minutes of inactivity
 exec_always --no-startup-id xautolock -time 5 -locker $HOME/.i3/i3exit lock
 
-# scratchpad goodness
-# bindsym $mod+s scratchpad show
-# bindsym $mod+Shift+s move window to scratchpad
-# for_window [instance="scratchpad"] move window to scratchpad
+# set the background
+exec_always --no-startup-id feh --bg-fill $HOME/.config/wallpaper.jpg
 
-gaps outer 10
-gaps inner 10

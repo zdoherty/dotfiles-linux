@@ -2,10 +2,6 @@
 
 . $HOME/lib/funcs.sh
 
-for path in "$HOME/.local/bin" "$HOME/bin"; do
-    push_on_path $path
-done
-
 for terminal in urxvt konsole iterm gnome-terminal xterm; do
     hash $terminal 2>/dev/null && export TERMINAL=$terminal && break
 done
@@ -22,17 +18,13 @@ trap EC ERR
 # Colors are nice
 [ -d /Library ] && alias ls='ls -G' || alias ls='ls --color=auto'
 
-# If we're got a user-site python installation present, use it
-PYTHON_SITE="$(python -m site --user-site)"
-if [ -d $PYTHON_SITE ]; then
-    push_on_python_path $PYTHON_SITE
-    push_on_path "$(python -m site --user-base)/bin"
-fi
+for config in $(ls -1 $HOME/rc/*.sh); do
+    . $config
+done
 
 # Function to pull in all our additional dotfiles
 function _full () {
     pushd $HOME/.dotfiles
-    rc/setup_python.sh
     git submodule init
     git submodule update
     popd
