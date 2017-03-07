@@ -27,8 +27,7 @@ set $darkblack   #1d2021
 set $transparent #00000000
 # gaps
 new_window 1pixel
-gaps outer 10
-gaps inner 10
+gaps inner 15
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -81,6 +80,8 @@ bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+x scratchpad show
+bindsym $mod+Shift+x move window to scratchpad
 
 # media window factory
 bindsym $mod+y fullscreen disable; floating enable; resize set 600 400; sticky enable; move window to position 2540 54
@@ -120,12 +121,12 @@ bar {
 exec_always --no-startup-id xautolock -time 5 -locker $HOME/.i3/i3exit lock
 
 # set the background
-exec_always --no-startup-id feh --bg-fill $HOME/.config/wallpaper.jpg
+exec_always --no-startup-id feh --bg-fill $HOME/.config/wallpaper.png
 
 # be cheezy
 exec_always --no-startup-id compton -f -c -i 0.9 -b
 
 # cache credentials on login
 exec --no-startup-id $terminal -name prompt -e ssh-add
-for_window [instance="prompt"] floating enable
+for_window [instance="prompt"] floating enable; resize set 600 400
 

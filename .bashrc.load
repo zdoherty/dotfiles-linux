@@ -29,3 +29,5 @@ function _full () {
     git submodule update
     popd
 }
+
+export AWS_PROFILE=prod-super-user
