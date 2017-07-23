@@ -29,7 +29,7 @@
 
 
 !! Make urxvt prettier
-URxvt*font:             xft:Inconsolata for Powerline:pixelsize=14
+URxvt*font:             xft:Inconsolata for Powerline:pixelsize=18
 URxvt*scrollBar:        false
 URxvt*scrollColor:      S_base01
 URxvt*title:            terminal

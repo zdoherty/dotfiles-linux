@@ -2,32 +2,30 @@
 
 . $HOME/lib/funcs.sh
 
-for terminal in urxvt konsole iterm gnome-terminal xterm; do
+DOTFILES_HOME="$HOME/.dotfiles"
+RUNCOMS="$HOME/.rcs"
+
+# opinionated ranking of terminal emulators and editors
+for terminal in urxvt iterm gnome-terminal konsole xterm; do
     hash $terminal 2>/dev/null && export TERMINAL=$terminal && break
 done
 export EDITOR=vim
 
+# colorful prompt
 PS1="\[\e[0;34m\]\u\[\e[1;32m\]@\[\e[0;34m\]\h\[\e[1;32m\]:\[\e[0;34m\]\w\[\e[m\]\[\e[1;32m\]\$\[\e[m\] "
 
-# Angry exit codes
-EC() {
-    echo -ne '\e[1;31m'$?'\e[m '
-}
-trap EC ERR
-
-# Colors are nice
+# more colors are nice
 [ -d /Library ] && alias ls='ls -G' || alias ls='ls --color=auto'
 
-for config in $(ls -1 $HOME/rc/*.sh); do
-    . $config
-done
+# If we've dropped a bootstrap environment file on here, use it.
+if [ -f "$HOME/.local/bootstrap_env" ]; then
+    . "$HOME/.local/bootstrap_env"
+fi
 
-# Function to pull in all our additional dotfiles
-function _full () {
-    pushd $HOME/.dotfiles
-    git submodule init
-    git submodule update
-    popd
-}
+# Run any hooks left by other dotfiles repos
+if [ -d "$RUNCOMS" ]; then
+    for f in $(ls -1 $RUNCOMS); do
+        . $RUNCOMS/$f
+    done
+fi
 
-export AWS_PROFILE=prod-super-user
