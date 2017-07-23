@@ -1,11 +1,27 @@
 #!/bin/bash
+#
+# top-level loader for dotfiles stuff. goals here are to get minimal customization done and
+# get homeshick up and running so plugins can take over implementing individual features.
+#
 
-. $HOME/lib/funcs.sh
+# if we've dropped a bootstrap environment file on here, use it.
+installer_env="$HOME/.local/bootstrap_env"
+if [ -f "$installer_env" ]; then
+    . "$installer_env"
+fi
 
-DOTFILES_HOME="$HOME/.dotfiles"
-RUNCOMS="$HOME/.rcs"
+# these can be changed during installation
+export HOMESHICK="${HOMESHICK:-$HOME/.homesick/repos/homeshick}"
+export RUNCOMS="${RUNCOMS:-$HOME/.rcs}"
+export HOMELIB="${HOMELIB:-$HOME/lib}"
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 
-# opinionated ranking of terminal emulators and editors
+# some things need to be on the path for the rest of this to work
+. $HOMELIB/funcs.sh
+push_on_path $HOME/bin
+push_on_path $HOMESHICK/bin
+
+# opinionated ranking of terminal emulators and editors^H :^)
 for terminal in urxvt iterm gnome-terminal konsole xterm; do
     hash $terminal 2>/dev/null && export TERMINAL=$terminal && break
 done
@@ -17,12 +33,7 @@ PS1="\[\e[0;34m\]\u\[\e[1;32m\]@\[\e[0;34m\]\h\[\e[1;32m\]:\[\e[0;34m\]\w\[\e[m\
 # more colors are nice
 [ -d /Library ] && alias ls='ls -G' || alias ls='ls --color=auto'
 
-# If we've dropped a bootstrap environment file on here, use it.
-if [ -f "$HOME/.local/bootstrap_env" ]; then
-    . "$HOME/.local/bootstrap_env"
-fi
-
-# Run any hooks left by other dotfiles repos
+# Run any hooks left by other dotfiles plugins
 if [ -d "$RUNCOMS" ]; then
     for f in $(ls -1 $RUNCOMS); do
         . $RUNCOMS/$f
