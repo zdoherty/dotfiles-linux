@@ -4,15 +4,21 @@
 
 # varz
 export GOPATH=~/code
-export GOROOT=/usr/local/go
+export GOPRIVATE="github.com/elevatestartupdev"
 export EDITOR=vim
 export TERM=xterm-256color
+
+# history
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
 
 # pathz
 push_on_path /sbin
 push_on_path /usr/sbin
 push_on_path ~/bin
 push_on_path ~/.local/bin
+push_on_path ~/.yarn/bin
+push_on_path ~/.gem/ruby/2.7.0/bin
 push_on_path /usr/local/go/bin
 push_on_path $GOPATH/bin
 
@@ -35,6 +41,9 @@ if [[ $PWD =~ ^$HOME/code/.* ]]; then
         -e s,kubernetes,k8s, \
         -e s,/anachronism/,/me/, \
         -e s,/zdoherty/,/me/, \
+        -e s,/elevatestartupdev/,/E^/, \
+        -e s,/modules/,/m/, \
+        -e s,/deploy/,/d/, \
         <<< $PWD
     )
 else
@@ -61,14 +70,6 @@ eval "$(direnv hook bash)"
 if [ -f '~/google-cloud-sdk/path.bash.inc' ]; then source '~/google-cloud-sdk/path.bash.inc'; fi
 if [ -f '~/google-cloud-sdk/completion.bash.inc' ]; then source '~/google-cloud-sdk/completion.bash.inc'; fi
 
-# doctl
-hash doctl && source <(doctl completion bash)
-
-# virtualenvwrapper
-export VIRTUALENVWRAPPER_PYTHON=python3
-export WORKON_HOME=$HOME/code/envs
-source ~/.local/bin/virtualenvwrapper.sh
-
 setxkbmap -option caps:ctrl_modifier
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
@@ -84,6 +85,23 @@ function podname {
 }
 
 function kexec {
-    kubectl exec -it $@ $(podname $@) bash
+    POD=$(podname $@)
+    kubectl exec -it $@ $POD -- bash || kubectl exec -it $@ $POD -- sh
 }
 
+function pro {
+    export AWS_PROFILE=$(awk '/^\[profile/ {print $2}' ~/.aws/config | tr -d '[]' | fzf)
+}
+
+function wd {
+    cd ~/code/src/github.com/$(cat \
+        <(cd ~/code/src/github.com && find zdoherty -type d -maxdepth 1 -mindepth 1 2>/dev/null) \
+        <(cd ~/code/src/github.com && find elevatestartupdev -type d -maxdepth 1 -mindepth 1 2>/dev/null) | fzf
+    )
+}
+
+push_on_path "$HOME/.pyenv/bin"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+export MINIKUBE_HOME=/mnt/vms/minikube
